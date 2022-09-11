@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+for f in "$@"
+do
+name=$(basename "$f")
+dir=$(dirname "$f")
+/opt/local/bin/ffmpeg -nostdin -i "$f" -y -b 250k -deinterlace -vcodec vp8 -acodec libvorbis -nostdin "$dir/webm/${name%.*}.webm"
+/opt/local/bin/ffmpeg -nostdin -i "$f" -y -b 250k -strict experimental -deinterlace -vcodec h264 -acodec aac -nostdin "$dir/mp4/${name%.*}.mp4"
+/opt/local/bin/ffmpeg -nostdin -i "$f" -y -ss 00:00:15.000 -deinterlace -vcodec mjpeg -vframes 1 -an -f rawvideo -s 720x480 "$dir/img/${name%.*}.jpg"
+done
